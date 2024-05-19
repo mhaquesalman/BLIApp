@@ -1,6 +1,6 @@
 # Hacker News API integration
 
-Application for assessment.
+Application for assessment in native android.
 
 <h4 style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:100%;font-size:25px;font-family:"Calibri","sans-serif";'>Features</h4>
 
@@ -12,7 +12,6 @@ Application for assessment.
 <h4 style='margin-top:0in;margin-right:0in;margin-bottom:8.0pt;margin-left:0in;line-height:100%;font-size:25px;font-family:"Calibri","sans-serif";'>Technologies and libraries</h4>
 
 <ul style="list-style-type: undefined;">
-    <li>Kotlin</li>
     <li>Jetpack compose</li>
     <li>Ktor Client for Fetching from API</li>
 </ul>
