@@ -37,6 +37,7 @@ fun NewsItem(
     val resources = context.resources
     val displayMetrics = resources.displayMetrics
     val screenWidth = displayMetrics.widthPixels / displayMetrics.density
+    val screenHeight = displayMetrics.heightPixels / displayMetrics.density
     val spacing = 10.dp
 
     Card(
