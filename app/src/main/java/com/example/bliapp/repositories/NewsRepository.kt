@@ -14,12 +14,12 @@ import kotlinx.coroutines.flow.flowOn
 
 class NewsRepository {
 
-    suspend fun getTopNews(): Flow<List<News>> {
+    suspend fun getTopNews(skip: Int): Flow<List<News>> {
         val topNewsItem = mutableListOf<News>()
         val topNews =
             KtorClient.httpClient.get("https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
                 .body<List<Int>>()
-        Log.d(TAG, "getTopNews: ${topNews.size}")
+//        Log.d(TAG, "getTopNews: ${topNews.size}")
 //        topNews.forEach {
 //            val topNewsItemResponse =
 //                    KtorClient.httpClient.get("https://hacker-news.firebaseio.com/v0/item/${it}.json?print=pretty")
@@ -27,10 +27,12 @@ class NewsRepository {
 //            topNewsItem.add(topNewsItemResponse)
 //        }
 
-        for (i in topNews) {
-            if (topNewsItem.size == 10) break
+        for ((index, value) in topNews.withIndex()) {
+            if (index < skip) continue
+            if (topNewsItem.size == 5) break
+
             val topNewsItemResponse =
-                    KtorClient.httpClient.get("https://hacker-news.firebaseio.com/v0/item/${i}.json?print=pretty")
+                    KtorClient.httpClient.get("https://hacker-news.firebaseio.com/v0/item/${value}.json?print=pretty")
                         .body<News>()
             topNewsItem.add(topNewsItemResponse)
         }
@@ -38,7 +40,7 @@ class NewsRepository {
 //            KtorClient.httpClient.get("https://hacker-news.firebaseio.com/v0/item/${topNews[10]}.json?print=pretty")
 //                .body<News>()
 
-//        Log.d(TAG, "getTopNewsItem : ${topNewsItem}")
+
 //        Log.d(TAG, "getTopNewsItem 1: ${topNewsItem.get(0)}")
 
         return flow {
@@ -52,7 +54,7 @@ class NewsRepository {
         val newNews =
             KtorClient.httpClient.get("https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty")
                 .body<List<Int>>()
-        Log.d(TAG, "getNewNews: ${newNews.size}")
+//        Log.d(TAG, "getNewNews: ${newNews.size}")
 
         for (i in newNews) {
             if (newNewsItem.size == 10) break

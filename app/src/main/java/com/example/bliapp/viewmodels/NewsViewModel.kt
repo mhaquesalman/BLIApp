@@ -1,7 +1,12 @@
 package com.example.bliapp.viewmodels
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bliapp.TAG
 import com.example.bliapp.models.News
 import com.example.bliapp.repositories.NewsRepository
 import com.example.bliapp.utils.RequestState
@@ -17,6 +22,10 @@ class NewsViewModel(
     private val newsRepository: NewsRepository
 ) : ViewModel() {
 
+    private val list = mutableListOf<News>()
+    private val _loadMore = mutableStateOf(false)
+    val loadMore: State<Boolean> = _loadMore
+
     private val _topNews = MutableStateFlow<RequestState<NewsList>>(RequestState.Idle)
     val topNews: StateFlow<RequestState<NewsList>> = _topNews
 
@@ -26,12 +35,23 @@ class NewsViewModel(
     private val _selectedNews = MutableStateFlow<RequestState<News>>(RequestState.Idle)
     val selectedNews: StateFlow<RequestState<News>> = _selectedNews
 
-    fun getTopNews() {
-        _topNews.value = RequestState.Loading
+    fun getTopNews(skip: Int) {
+        if (skip == 0)
+            _topNews.value = RequestState.Loading
+        else
+            _loadMore.value = true
         try {
             viewModelScope.launch {
-                newsRepository.getTopNews().collect {
-                    _topNews.value = RequestState.Success(it)
+                newsRepository.getTopNews(skip).collect {
+                    if (list.isEmpty()) {
+                        list.addAll(it)
+                    } else {
+                        it.forEach { news ->
+                            list.add(news)
+                        }
+                    }
+                    _topNews.value = RequestState.Success(list)
+                    _loadMore.value = false
                 }
             }
         } catch (err: Exception) {

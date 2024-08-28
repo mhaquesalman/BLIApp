@@ -30,6 +30,7 @@ import com.example.bliapp.utils.formatDate
 @Composable
 fun NewsItem(
     news: News,
+    isLoadingMore: Boolean,
     onNewsClicked: (Int) -> Unit
 ) {
 
@@ -47,7 +48,8 @@ fun NewsItem(
         modifier = Modifier
             .padding(12.dp)
             .clickable {
-                onNewsClicked(news.id!!)
+                if (!isLoadingMore)
+                    onNewsClicked(news.id!!)
             }
 
     ) {
